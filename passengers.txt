@@ -1,0 +1,19 @@
+HEADER, AA123,150,12,4,20,5,120,6
+John, Smith,1,A,A
+Maria, Johnson,2,A
+Evan, Brown,3,B
+Sophia Davis,4,B
+Liam Wilson,5,C
+Olivia Thompson,6,C
+Noah Martinez,5345747,b
+Emma Robinson,8,C
+Ava Clark,9,C
+William Rodriguez,10,C
+New 1,12,a
+new 3,13,A
+new b,11,a
+gagag,14,a
+aagsag,15,a
+aggdggaagagaga,16,a
+glodgasgsag,17,a
+gdfdsfhhshshhdsh,18,a
