@@ -1,8 +1,8 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Flight{
     //fields for flight manifest
@@ -11,6 +11,7 @@ public class Flight{
     private Passenger passengers[];
     private final Map<Seat.SeatId, Passenger> seatToPassenger = new HashMap<>();
     private final Map<Passenger.PassengerId, Seat.SeatId> passengerToSeat = new HashMap<>();
+    private final Map<Seat.SeatId, Seat> seatMap = new HashMap<>();
 
     //Constructor
     public Flight(String fileName) throws IOException{
@@ -26,13 +27,13 @@ public class Flight{
         if (!(this.header.getTotalSeats()==-1)){
             seats = new Seat[this.header.getTotalSeats()];
             passengers = new Passenger[this.header.getTotalSeats()];
-            Seat.fillSeats(header, seats);
+            fillSeats(header, seats);
             Scanner parsePassengers = new Scanner(data);
             parsePassengers.nextLine();
             int i = 0;
             while (parsePassengers.hasNextLine()){
                 String line = parsePassengers.nextLine();
-                passengers[i] = readPassenger(line);
+                readToPassenger(passengers, line, i);
                 i++;
             }
             parsePassengers.close();
@@ -96,6 +97,72 @@ public class Flight{
         } else {
             localHeader = new Header();
         }
-        return localHeader;
+         return localHeader;
+    }
+
+    //fill seats helper method
+    private static void fillSeats(Header header, Seat[] seats) {
+        int idx = 0;
+        int nextRow = 1;
+
+        idx = fillCabin(
+                seats, idx, nextRow,
+                header.getFirstClassRows(),
+                header.getFirstClassSeatsPerRow(),
+                Seat.CabinClass.FIRST
+        );
+        nextRow += header.getFirstClassRows();
+
+        idx = fillCabin(
+                seats, idx, nextRow,
+                header.getBusinessClassRows(),
+                header.getBusinessClassSeatsPerRow(),
+                Seat.CabinClass.BUSINESS
+        );
+
+        nextRow += header.getBusinessClassRows();
+
+        idx = fillCabin(
+                seats, idx, nextRow,
+                header.getCoachRows(),
+                header.getCoachSeatsPerRow(),
+                Seat.CabinClass.COACH
+        );
+    }
+
+    //fill seats helper helper method 
+    private static int fillCabin(
+            Seat[] seats,
+            int startIndex,
+            int startRowNumber,
+            int rows,
+            int seatsPerRow,
+            Seat.CabinClass cabin
+    ) {
+        int idx = startIndex;
+
+        for (int r = 0; r < rows; r++) {
+            int rowNumber = startRowNumber + r;
+
+            for (int s = 0; s < seatsPerRow; s++) {
+                char letter = (char) ('A' + s);
+                seats[idx++] = new Seat(new Seat.SeatId(rowNumber, letter), cabin);
+            }
+        }
+        return idx;
+    }
+    
+    //fill seatMap hash map helper method
+    private void fillSeatMap(Seat[] seats){
+        for(Seat s : seats){
+            seatMap.put(s.id(), s);
+        }
+    }
+
+    //read line to passenger arr helper method
+    private static void readToPassenger(Passenger[] passengers, String line, int i){
+        String[] parts = line.split(",");
+        passengers[i] = new Passenger(parts[1], parts[2]);
+        Seat.SeatId sID = new Seat.SeatId((Integer.parseInt(parts[3])), parts[4].charAt(0));
     }
 }
