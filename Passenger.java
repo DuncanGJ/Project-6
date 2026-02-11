@@ -8,7 +8,7 @@ public class Passenger {
     public Passenger(String firstName, String lastName){
         this.firstName = firstName;
         this.lastName= lastName;
-        this.id = new PassengerId((String)firstName + lastName + (Math.random()*1000000));
+        this.id = new PassengerId((String)firstName + lastName + (1000000 + (int) (Math.random()*9000000)));
     }
 
     //setters
@@ -20,5 +20,9 @@ public class Passenger {
     public String getLastName(){return lastName;}
     public PassengerId getPassengerId(){return id;}
 
-    
+    @Override
+    public String toString(){
+        return getFirstName() + " " + getLastName() + " PID: " + getPassengerId();
+    }
+
 }

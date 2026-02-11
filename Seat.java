@@ -13,5 +13,8 @@ public class Seat {
     public SeatId id() { return id; }
     public CabinClass cabinClass() { return cabinClass; }
 
+    public void printSeat(){
+        System.out.printf("%s %s%n", id, cabinClass);
+    }
 
 }
